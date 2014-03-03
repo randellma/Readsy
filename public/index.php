@@ -14,162 +14,209 @@
 	</head>
 
 	<body>
-		<p id ="test"> It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-		</p>
-		<button onclick="LoadTextToReadbyId('readsy_canvas', 'test')">Read this Text</button>
-		<br />
+		<div id="readsy_read_1">
+
+			<textarea id="text" rows="10" cols="100">It is. a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+			</textarea>
+		</div>
+		<button id="btnTextArea" onclick="readsy_1 = new readsy_widget(1, document.getElementById('text').value)">Read this</button>
 		
-		<div class="readsy_widget">
-			<canvas id="readsy_canvas" width="300" height="50" style="border:1px solid #000000;"></canvas>
+		<div class="readsy_widget" id ="readsy_widget_1">
+			<canvas id="readsy_canvas_1" width="300" height="50" style="border:1px solid #000000;"></canvas>
 			<br />		
-			<button id="playpause" onclick="btn_PlayPause()">Read</button>
-			<button id="reset" onclick="ResetRead()">Reset</button>
-			<input id="wpm" onchange="txtChangeWpm(this.value)" type="number" min="100" step="50" value="300"/>
+			<button id="readsy_pp_1" onclick="readsy_1.btn_PlayPause()">Read</button>
+			<button id="readsy_reset_1" onclick="readsy_1.ResetRead()">Reset</button>
+			<input id="readsy_wpm_1" onchange="readsy_1.txtChangeWpm()" type="number" min="100" step="50" value="600"/>
 		</div>
 		
 		<script>
-			
-			//Globals
-			var ctx;
-			var reading = false;
-			var baseTimeout = 120;
-			var fontsize = 30;
-			var textArray;
-			var reader;
-			var place = 0;
-			
-			function LoadTextToReadbyId(canvas, id)
+			/**/
+		
+			/*Global functions needed because setInterval and setTimeout don't trigger in scope calls*/
+			function readsy_setRead(instance)
 			{
-				LoadTextToReadbyText(canvas, document.getElementById(id).innerHTML);
+				instance.reader = setInterval(function(){instance.Read()}, instance.baseTimeout);
 			}
 			
-			function LoadTextToReadbyText(canvas, text)
+			function readsy_setStart(instance)
 			{
-				//Get Canvas
-				var c = document.getElementById(canvas);
-				ctx = c.getContext("2d");
-				ctx.font = fontsize + "px Arial";
-				
-				//Get text to read
-				textArray = text.trim().split(" ");
-				
-				//Set reading speed
-				txtChangeWpm(document.getElementById("wpm").value)
-				
-				//Reset Canvas to first word
-				ResetRead();
+				setTimeout(function(){instance.StartStopRead()}, 1.25*instance.baseTimeout);
 			}
 			
-			function Read()
+			/*Readsy Methods*/
+			function readsy_Read()
 			{
-				if(place < textArray.length)
+				if(this.place < this.textArray.length)
 				{
-					var word = textArray[place];
+					var word = this.textArray[this.place];
 					var lastChar = word.slice(-1);
 					
-					DisplayWord(word);
+					this.DisplayWord(word);
 					
 					if(lastChar == "." || lastChar == ",")
 					{
-						StartStopRead()
-						setTimeout(function(){StartStopRead()}, 1.25*baseTimeout);
+						this.StartStopRead()
+						readsy_setStart(this);
 					}
 				}
 				else
 				{
-					StartStopRead();
+					this.StartStopRead();
 				}
-				place++;
+				this.place++;
 			}
-			
-			function DisplayWord(word)
+			/**/
+			function readsy_DisplayWord(word)
 			{
-				DrawBlankSpace();
+				this.DrawBlankSpace();
 				
-				var x = ctx.canvas.width/3;
-				var y = ctx.canvas.height/2 + fontsize/4;
+				var x = this.ctx.canvas.width/3;
+				var y = this.ctx.canvas.height/2 + this.fontsize/4;
 				var focusChar = Math.ceil((word.length + 1)/3);
-				x -= (ctx.measureText(word.slice(0,focusChar-1)).width + ctx.measureText(word[focusChar-1]).width/2);
+				x -= (this.ctx.measureText(word.slice(0,focusChar-1)).width + this.ctx.measureText(word[focusChar-1]).width/2);
 				
-				FillRedCharWord(word, x, y, focusChar-1)
+				this.FillRedCharWord(word, x, y, focusChar-1)
 			}
-			
-			function DrawBlankSpace()
+			/**/
+			function readsy_DrawBlankSpace()
 			{
-				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-				ctx.moveTo(ctx.canvas.width/3,50);
-				ctx.lineTo(ctx.canvas.width/3,0);
-				ctx.strokeStyle = '#e3e3e3';
-				ctx.stroke();
+				this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+				this.ctx.moveTo(this.ctx.canvas.width/3,50);
+				this.ctx.lineTo(this.ctx.canvas.width/3,0);
+				this.ctx.strokeStyle = '#e3e3e3';
+				this.ctx.stroke();
 				
 			}
-			
-			function FillRedCharWord(word, x, y, redPos)
+			/**/
+			function readsy_FillRedCharWord(word, x, y, redPos)
 			{
 			    for(var i = 0; i < word.length; ++i)
 			    {
 			    	if(i == redPos)
 			    	{
-						ctx.fillStyle = '#ff0000';
+						this.ctx.fillStyle = '#ff0000';
 			    	}
 			    	else
 			    	{
-				    	ctx.fillStyle = '#000';
+				    	this.ctx.fillStyle = '#000';
 			    	}
 			        var ch = word[i];
-			        ctx.fillText(ch, x, y);
-			        x += ctx.measureText(ch).width;
+			        this.ctx.fillText(ch, x, y);
+			        x += this.ctx.measureText(ch).width;
 			    }
 			}
-		
-			function StartStopRead()
+			/**/
+			function readsy_StartStopRead()
 			{
-				if(reading)
+				if(this.reading)
 				{
-					clearInterval(reader);
-					reading = false;
+					clearInterval(this.reader);
+					this.reading = false;
 				}
 				else
 				{
-					reader = setInterval(function(){Read()},baseTimeout);
-					reading = true;
+					readsy_setRead(this);
+					this.reading = true;
 				}
 			}
-			
-			function btn_PlayPause()
+			/**/
+			function readsy_ResetRead()
 			{
-				if(!textArray)
+				clearInterval(this.reader);
+				this.reading = false;
+				this.btnPlayPause.innerHTML = "Read";
+				this.place = 0;
+				this.DisplayWord(this.textArray[0]);
+			}
+			/**/
+			function readsy_btnReset()
+			{
+				this.ResetRead();
+			}
+			/**/
+			function readsy_txtChangeWpm()
+			{
+				this.baseTimeout = 60000/this.txtWpm.value;
+				
+				if(this.reading)
+				{
+					this.StartStopRead();
+					this.StartStopRead();
+				}
+			}
+			/**/
+			function readsy_btnPlayPause()
+			{
+				if(!this.textArray)
 				{
 					return;
 				}
 				
-				StartStopRead();
-				if(reading)
+				this.StartStopRead();
+				if(this.reading)
 				{
-					document.getElementById('playpause').innerHTML = "Pause";
+					this.btnPlayPause.innerHTML = "Pause";
 				}
 				else
 				{
-					document.getElementById('playpause').innerHTML = "Resume";
+					this.btnPlayPause.innerHTML = "Resume";
 				}
 			}
-			
-			function txtChangeWpm(wpm)
+			/**/
+			//==============Object Definition=================
+			function readsy_widget(guid, text)
 			{
-				baseTimeout = 60000/wpm;
-				StartStopRead();
-				StartStopRead();
-			}
+				//Helper Methods
+				this.StartStopRead = readsy_StartStopRead;
+				this.Read = readsy_Read;
+				this.DrawBlankSpace = readsy_DrawBlankSpace;
+				this.DisplayWord = readsy_DisplayWord;
+				this.FillRedCharWord = readsy_FillRedCharWord;
+				this.ResetRead = readsy_ResetRead;
+				
+				//Event Methods
+				this.btn_PlayPause = readsy_btnPlayPause;
+				this.btn_Reset = readsy_btnReset;
+				this.txtChangeWpm = readsy_txtChangeWpm;
 			
-			function ResetRead()
-			{
-				clearInterval(reader);
-				reading = false;
-				document.getElementById('playpause').innerHTML = "Read";
-				place = 0;
-				DisplayWord(textArray[0]);
+				//Interface references
+				this.txtWpm = document.getElementById("readsy_wpm_"+guid);
+				this.btnPlayPause = document.getElementById("readsy_pp_"+guid);
+				this.btnReset = document.getElementById("readsy_reset_"+guid);
+				this.cvsCanvas = document.getElementById("readsy_canvas_"+guid);
+				
+				//Globals
+				this.guid = guid;
+				this.reading = false;
+				this.fontsize = 30;
+				this.baseTimeout;
+				this.textArray;
+				this.reader;
+				this.place = 0;
+				//Set canvas context
+				this.ctx = this.cvsCanvas.getContext("2d");
+				this.ctx.font = this.fontsize + "px Arial";
+				
+				//Set Text to Read
+				if(!text)
+				{
+					//Try to find the defined text and strip the extra html
+					text = document.getElementById("readsy_read_"+guid).innerHTML
+					var tmp = document.createElement("DIV");
+					tmp.innerHTML = text;
+					text = tmp.textContent || tmp.innerText || "";
+					
+				}
+				this.textArray = text.trim().split(" ");
+				
+				//Set the default WPM
+				this.txtChangeWpm();
+				
+				//Reset canvas to first word
+				this.ResetRead();
 			}
-			
+			var readsy_1 = new readsy_widget(1);
+		
 		</script>
 		
 		
