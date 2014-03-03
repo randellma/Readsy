@@ -1,0 +1,17 @@
+.readsy_widget
+{
+	border: 1px solid black;
+	width: 300px;
+	padding: 5px;
+}
+
+.readsy_widget input
+{
+	width: 50px;
+	float: right;
+}
+
+.readsy_widget button
+{
+	width: 80px;
+}
