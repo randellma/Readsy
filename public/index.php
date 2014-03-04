@@ -23,47 +23,48 @@
 		
 		<div class="readsy_widget" id ="readsy_widget_1">
 			<canvas id="readsy_canvas_1" width="300" height="50" style="border:1px solid #000000;"></canvas>
-			<br />		
+			<br />	
 			<button id="readsy_pp_1" onclick="readsy_1.btn_PlayPause()">Read</button>
 			<button id="readsy_reset_1" onclick="readsy_1.ResetRead()">Reset</button>
-			<input id="readsy_wpm_1" onchange="readsy_1.txtChangeWpm()" type="number" min="100" step="50" value="600"/>
+			<input id="readsy_wpm_1" onchange="readsy_1.txtChangeWpm()" type="number" min="100" step="50" value="400"/>
 		</div>
 		
 		<script>
-			/**/
-		
 			/*Global functions needed because setInterval and setTimeout don't trigger in scope calls*/
-			function readsy_setRead(instance)
+			function readsy_Continue(instance, interval)
 			{
-				instance.reader = setInterval(function(){instance.Read()}, instance.baseTimeout);
-			}
-			
-			function readsy_setStart(instance)
-			{
-				setTimeout(function(){instance.StartStopRead()}, 1.25*instance.baseTimeout);
+				instance.place++;
+				setTimeout(function(){instance.Read()}, interval);
 			}
 			
 			/*Readsy Methods*/
 			function readsy_Read()
 			{
-				if(this.place < this.textArray.length)
-				{
-					var word = this.textArray[this.place];
-					var lastChar = word.slice(-1);
-					
-					this.DisplayWord(word);
-					
-					if(lastChar == "." || lastChar == ",")
-					{
-						this.StartStopRead()
-						readsy_setStart(this);
-					}
-				}
-				else
+				if(this.place >= this.textArray.length)
 				{
 					this.StartStopRead();
 				}
-				this.place++;
+				if(this.reading)
+				{
+					var word = this.textArray[this.place];
+					var lastChar = word.slice(-1);
+					var interval = this.baseTimeout;
+					
+					this.DisplayWord(word);
+					
+					
+					if(lastChar == "." || lastChar == "," || lastChar == "!" || lastChar == ";" 
+						|| lastChar == ":")
+					{
+						interval = 2*this.baseTimeout;
+					}
+					else if(word.length >=8)
+					{
+						interval = 1.5*this.baseTimeout;
+					}
+					
+					readsy_Continue(this,interval);
+				}
 			}
 			/**/
 			function readsy_DisplayWord(word)
@@ -80,10 +81,35 @@
 			/**/
 			function readsy_DrawBlankSpace()
 			{
-				this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-				this.ctx.moveTo(this.ctx.canvas.width/3,50);
-				this.ctx.lineTo(this.ctx.canvas.width/3,0);
+				var h = this.ctx.canvas.height;
+				var w = this.ctx.canvas.width
+				
+				//draw focus line
+				this.ctx.clearRect(0, 0, w, h);
+				this.ctx.beginPath();
+				this.ctx.lineWidth = 1;
 				this.ctx.strokeStyle = '#e3e3e3';
+				
+				this.ctx.moveTo(w/3,h);
+				this.ctx.lineTo(w/3,0);
+				this.ctx.stroke();
+				
+				//draw progress bar
+				this.ctx.beginPath();
+				this.ctx.lineWidth = 10;
+				
+				this.ctx.moveTo(0,h);
+				this.ctx.lineTo(w,h);
+				this.ctx.stroke();
+				
+				
+				//draw progress marker
+				this.ctx.beginPath();
+				this.ctx.lineWidth = 1;
+				this.ctx.strokeStyle = '#000';
+				
+				this.ctx.moveTo(Math.ceil((this.place/this.textArray.length)*300),h);
+				this.ctx.lineTo(Math.ceil((this.place/this.textArray.length)*300),h-5);
 				this.ctx.stroke();
 				
 			}
@@ -110,19 +136,17 @@
 			{
 				if(this.reading)
 				{
-					clearInterval(this.reader);
 					this.reading = false;
 				}
 				else
 				{
-					readsy_setRead(this);
 					this.reading = true;
+					this.Read();
 				}
 			}
 			/**/
 			function readsy_ResetRead()
 			{
-				clearInterval(this.reader);
 				this.reading = false;
 				this.btnPlayPause.innerHTML = "Read";
 				this.place = 0;
@@ -137,12 +161,6 @@
 			function readsy_txtChangeWpm()
 			{
 				this.baseTimeout = 60000/this.txtWpm.value;
-				
-				if(this.reading)
-				{
-					this.StartStopRead();
-					this.StartStopRead();
-				}
 			}
 			/**/
 			function readsy_btnPlayPause()
@@ -211,7 +229,6 @@
 				
 				//Set the default WPM
 				this.txtChangeWpm();
-				
 				//Reset canvas to first word
 				this.ResetRead();
 			}
