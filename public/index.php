@@ -22,11 +22,11 @@
 		<button id="btnTextArea" onclick="readsy_1 = new readsy_widget(1, document.getElementById('text').value)">Read this</button>
 		
 		<div class="readsy_widget" id ="readsy_widget_1">
-			<canvas id="readsy_canvas_1" width="300" height="50" style="border:1px solid #000000;"></canvas>
-			<br />	
-			<button id="readsy_pp_1" onclick="readsy_1.btn_PlayPause()">Read</button>
-			<button id="readsy_reset_1" onclick="readsy_1.ResetRead()">Reset</button>
-			<input id="readsy_wpm_1" onchange="readsy_1.txtChangeWpm()" type="number" min="100" step="50" value="400"/>
+				<canvas id="readsy_canvas_1" width="300" height="60" /></canvas>
+			<div class="readsy_controls">
+				<button id="readsy_pp_1">Read</button>
+				<input id="readsy_wpm_1" type="number" min="100" step="50" value="400"/>
+			</div>
 		</div>
 		
 		<script>
@@ -34,6 +34,7 @@
 			function readsy_Continue(instance, interval)
 			{
 				instance.place++;
+				instance.started = true;
 				setTimeout(function(){instance.Read()}, interval);
 			}
 			
@@ -42,7 +43,7 @@
 			{
 				if(this.place >= this.textArray.length)
 				{
-					this.StartStopRead();
+					this.EndRead();
 				}
 				if(this.reading)
 				{
@@ -63,7 +64,12 @@
 						interval = 1.5*this.baseTimeout;
 					}
 					
+					this.started = false;
 					readsy_Continue(this,interval);
+				}
+				else
+				{
+					this.started = false;
 				}
 			}
 			/**/
@@ -71,8 +77,8 @@
 			{
 				this.DrawBlankSpace();
 				
-				var x = this.ctx.canvas.width/3;
-				var y = this.ctx.canvas.height/2 + this.fontsize/4;
+				var x = this.w/3;
+				var y = (this.h - this.progressWidth)/2 + this.fontsize/4;
 				var focusChar = Math.ceil((word.length + 1)/3);
 				x -= (this.ctx.measureText(word.slice(0,focusChar-1)).width + this.ctx.measureText(word[focusChar-1]).width/2);
 				
@@ -80,36 +86,37 @@
 			}
 			/**/
 			function readsy_DrawBlankSpace()
-			{
-				var h = this.ctx.canvas.height;
-				var w = this.ctx.canvas.width
-				
+			{				
 				//draw focus line
-				this.ctx.clearRect(0, 0, w, h);
+				this.ctx.clearRect(0, 0, this.w, this.h);
 				this.ctx.beginPath();
 				this.ctx.lineWidth = 1;
 				this.ctx.strokeStyle = '#e3e3e3';
 				
-				this.ctx.moveTo(w/3,h);
-				this.ctx.lineTo(w/3,0);
+				this.ctx.moveTo(this.w/3,this.h);
+				this.ctx.lineTo(this.w/3,0);
 				this.ctx.stroke();
 				
-				//draw progress bar
-				this.ctx.beginPath();
-				this.ctx.lineWidth = 10;
+				//draw progress bar				
+				this.ctx.fillStyle = "#e3e3e3";
+				this.ctx.fillRect(0,this.h-this.progressWidth,this.w,this.progressWidth);
 				
-				this.ctx.moveTo(0,h);
-				this.ctx.lineTo(w,h);
+				
+				this.ctx.beginPath();
+				this.ctx.lineWidth = 1;
+				this.ctx.strokeStyle = '#000';
+				this.ctx.moveTo(0,this.h - this.progressWidth - 0.5);
+				this.ctx.lineTo(this.w,this.h - this.progressWidth - 0.5);
 				this.ctx.stroke();
 				
 				
 				//draw progress marker
 				this.ctx.beginPath();
-				this.ctx.lineWidth = 1;
-				this.ctx.strokeStyle = '#000';
+				this.ctx.lineWidth = 2;
+				this.ctx.strokeStyle = '#ff0000';
 				
-				this.ctx.moveTo(Math.ceil((this.place/this.textArray.length)*300),h);
-				this.ctx.lineTo(Math.ceil((this.place/this.textArray.length)*300),h-5);
+				this.ctx.moveTo(Math.ceil((this.place/this.textArray.length)*300)+0.5,this.h);
+				this.ctx.lineTo(Math.ceil((this.place/this.textArray.length)*300)+0.5,this.h-this.progressWidth);
 				this.ctx.stroke();
 				
 			}
@@ -132,30 +139,38 @@
 			    }
 			}
 			/**/
-			function readsy_StartStopRead()
+			function readsy_StartRead()
 			{
-				if(this.reading)
+				this.reading = true;
+				if(!this.started)
 				{
-					this.reading = false;
-				}
-				else
-				{
-					this.reading = true;
+					this.ended = false;
+					this.btnPlayPause.innerHTML = "Pause";
 					this.Read();
 				}
+				
+			}
+			/**/
+			function readsy_StopRead()
+			{
+				this.reading = false;
+			}
+			/**/
+			function readsy_EndRead()
+			{
+				this.StopRead();
+				this.ended = true;
+				this.btnPlayPause.innerHTML = "Reread";
 			}
 			/**/
 			function readsy_ResetRead()
 			{
 				this.reading = false;
+				this.started = false;
+				this.ended = false;
 				this.btnPlayPause.innerHTML = "Read";
 				this.place = 0;
 				this.DisplayWord(this.textArray[0]);
-			}
-			/**/
-			function readsy_btnReset()
-			{
-				this.ResetRead();
 			}
 			/**/
 			function readsy_txtChangeWpm()
@@ -170,51 +185,141 @@
 					return;
 				}
 				
-				this.StartStopRead();
-				if(this.reading)
+				if(this.ended)
+				{
+					this.ResetRead();
+					return;
+				}
+				
+				if(!this.reading)
 				{
 					this.btnPlayPause.innerHTML = "Pause";
+					this.StartRead();
 				}
 				else
 				{
 					this.btnPlayPause.innerHTML = "Resume";
+					this.StopRead();
 				}
 			}
+			function readsy_mouseDown(event)
+			{
+				//get coordinates and offset correctly
+				var rect = this.cvsCanvas.getBoundingClientRect();
+				var x = event.clientX - rect.left;
+				var y = event.clientY - rect.top;
+				
+				if(y > this.h - this.progressWidth)
+				{
+					this.place = Math.floor((x/this.w)*this.textArray.length);
+					this.DisplayWord(this.textArray[this.place]);
+					this.mousedown = true;
+					
+					//momentarily pause reading until
+					if(this.reading)
+					{
+						this.StopRead();
+						this.pause = true;
+					}
+					
+					//
+					if(this.ended)
+					{
+						this.StartRead();
+					}
+				}
+			}
+			function readsy_mouseMove(event)
+			{
+				//get coordinates and offset correctly
+				var rect = this.cvsCanvas.getBoundingClientRect();
+				var x = event.clientX - rect.left;
+				var y = event.clientY - rect.top;
+				
+				if(y > this.h - this.progressWidth)
+				{
+					this.cvsCanvas.style.cursor = "pointer";
+				}
+				else
+				{
+					this.cvsCanvas.style.cursor = "default";
+				}
+				
+				if(this.mousedown && event.which == 1)
+				{
+					this.place = Math.floor((x/this.w)*this.textArray.length);
+					this.DisplayWord(this.textArray[this.place]);
+					this.mousedown = true;
+				}
+				
+			}
+			function readsy_mouseUp(event)
+			{
+				this.mousedown = false;
+				
+				if(this.pause)
+				{
+					this.StartRead();
+					this.pause = false;
+				}
+			}
+			
 			/**/
 			//==============Object Definition=================
 			function readsy_widget(guid, text)
 			{
 				//Helper Methods
-				this.StartStopRead = readsy_StartStopRead;
+				this.StartRead = readsy_StartRead;
+				this.StopRead = readsy_StopRead;
 				this.Read = readsy_Read;
 				this.DrawBlankSpace = readsy_DrawBlankSpace;
 				this.DisplayWord = readsy_DisplayWord;
 				this.FillRedCharWord = readsy_FillRedCharWord;
 				this.ResetRead = readsy_ResetRead;
+				this.EndRead = readsy_EndRead;
 				
 				//Event Methods
 				this.btn_PlayPause = readsy_btnPlayPause;
-				this.btn_Reset = readsy_btnReset;
 				this.txtChangeWpm = readsy_txtChangeWpm;
+				this.mouseDown = readsy_mouseDown;
+				this.mouseMove = readsy_mouseMove;
+				this.mouseUp = readsy_mouseUp;
 			
 				//Interface references
+				this.wgtReadsy = document.getElementById("readsy_widget_"+guid);
 				this.txtWpm = document.getElementById("readsy_wpm_"+guid);
 				this.btnPlayPause = document.getElementById("readsy_pp_"+guid);
-				this.btnReset = document.getElementById("readsy_reset_"+guid);
 				this.cvsCanvas = document.getElementById("readsy_canvas_"+guid);
 				
-				//Globals
+				//Bind Events
+				var that = this;
+				this.txtWpm.onclick = function(){that.txtChangeWpm();};
+				this.btnPlayPause.onclick = function(){that.btn_PlayPause();};
+				this.cvsCanvas.onmousedown = function(event){that.mouseDown(event);};
+				this.cvsCanvas.onmouseup = function(event){that.mouseUp(event);};
+				this.cvsCanvas.onmousemove = function(event){that.mouseMove(event);};
+				this.wgtReadsy.onmouseup = function(event){that.mouseUp(event);};
+				
+				//Instance variables
 				this.guid = guid;
-				this.reading = false;
-				this.fontsize = 30;
-				this.baseTimeout;
 				this.textArray;
-				this.reader;
+				this.instance = this;
+				this.mousedown = false;
+				//Reading variables
+				this.reading = false;
+				this.started = false;
+				this.pause = false;
+				this.ended = false;
 				this.place = 0;
+				this.baseTimeout;
+				//Display Settings
+				this.fontsize = 30;	
+				this.progressWidth = 10;			
 				//Set canvas context
 				this.ctx = this.cvsCanvas.getContext("2d");
 				this.ctx.font = this.fontsize + "px Arial";
-				
+				this.h = this.ctx.canvas.height;
+				this.w = this.ctx.canvas.width
 				//Set Text to Read
 				if(!text)
 				{

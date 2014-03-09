@@ -2,16 +2,21 @@
 {
 	border: 1px solid black;
 	width: 300px;
-	padding: 5px;
+	padding: 6px;
 }
 
-.readsy_widget input
+.readsy_widget canvas
 {
-	width: 50px;
+	border: 1px solid #000000;
+}
+
+.readsy_controls input
+{
+	width: 75px;
 	float: right;
 }
 
-.readsy_widget button
+.readsy_controls button
 {
 	width: 80px;
 }
