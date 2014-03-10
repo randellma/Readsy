@@ -85,8 +85,8 @@ function readsy_DrawBlankSpace()
 	this.ctx.lineWidth = 2;
 	this.ctx.strokeStyle = '#ff0000';
 	
-	this.ctx.moveTo(Math.ceil((this.place/this.textArray.length)*this.w)+0.5,this.h);
-	this.ctx.lineTo(Math.ceil((this.place/this.textArray.length)*this.w)+0.5,this.h-this.progressWidth);
+	this.ctx.moveTo(Math.ceil((this.place/(this.textArray.length-1))*this.w)-0.5,this.h);
+	this.ctx.lineTo(Math.ceil((this.place/(this.textArray.length-1))*this.w)-0.5,this.h-this.progressWidth);
 	this.ctx.stroke();
 	
 }
