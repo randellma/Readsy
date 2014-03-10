@@ -150,7 +150,7 @@ function readsy_txtChangeWpm()
 /**/
 function readsy_btnPlayPause()
 {
-	if(!this.textArray)
+	if(!this.textArray || this.textArray[0].length<=0)
 	{
 		return;
 	}
