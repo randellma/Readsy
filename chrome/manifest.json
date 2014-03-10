@@ -1,0 +1,27 @@
+{
+  "manifest_version": 2,
+
+  "name": "Readsy",
+  "description": "Ready Easily",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+                      {
+                      "matches": 
+                      [	"<all_urls>"],
+                      "css": 
+                      [	"readsy.css"],
+                      "js": 
+                      [	"readsy.js",
+					  	"readsy_app.js"]
+                      }
+					  ]
+}

@@ -1,0 +1,22 @@
+.readsy_widget
+{
+	border: 1px solid black;
+	width: 300px;
+	padding: 6px;
+}
+
+.readsy_widget canvas
+{
+	border: 1px solid #000000;
+}
+
+.readsy_controls input
+{
+	width: 75px;
+	float: right;
+}
+
+.readsy_controls button
+{
+	width: 80px;
+}
