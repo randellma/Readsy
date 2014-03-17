@@ -8,20 +8,49 @@
 	border: 1px solid black;
 	width: 300px;
 	padding: 6px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background-color: white;
+}
+
+.readsy_expander
+{
+	padding-right: 5px;
+	font-size: 8px !important;
+	color: Red !important;
+	font-weight: bold;
+	float: left;
+}
+
+.readsy_expander:hover
+{
+	cursor: pointer;
 }
 
 .readsy_widget canvas
 {
 	border: 1px solid #000000;
+	background-color: white;
+}
+
+.readsy_controls
+{
+	margin-top: 2px;
+	margin-bottom: -2px;
 }
 
 .readsy_controls input
 {
 	width: 75px;
-	float: right;
 }
 
 .readsy_controls button
 {
 	width: 80px;
+	margin: 0px !important;
+}
+
+.readsy_wpm
+{
+	float: right;
 }

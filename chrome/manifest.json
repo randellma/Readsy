@@ -20,8 +20,8 @@
                       "css": 
                       [	"readsy.css"],
                       "js": 
-                      [	"readsy.js",
-					  	"readsy_app.js"]
+                      [	"readsy_app.js",
+					  	"readsy.js"]
                       }
 					  ]
 }

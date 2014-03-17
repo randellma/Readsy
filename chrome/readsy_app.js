@@ -130,7 +130,7 @@ function readsy_EndRead()
 {
 	this.StopRead();
 	this.ended = true;
-	this.btnPlayPause.innerHTML = "Reset";
+	this.btnPlayPause.innerHTML = "Reread";
 }
 /**/
 function readsy_ResetRead()
@@ -158,6 +158,7 @@ function readsy_btnPlayPause()
 	if(this.ended)
 	{
 		this.ResetRead();
+		this.StartRead();
 		return;
 	}
 	
@@ -259,12 +260,14 @@ function readsy_widget(guid, text)
 	this.wgtReadsy = document.getElementById("readsy_widget_"+guid);
 	this.txtWpm = document.getElementById("readsy_wpm_"+guid);
 	this.btnPlayPause = document.getElementById("readsy_pp_"+guid);
+	this.btnReset = document.getElementById("readsy_reset_"+guid);
 	this.cvsCanvas = document.getElementById("readsy_canvas_"+guid);
 	
 	//Bind Events
 	var that = this;
 	this.txtWpm.onclick = function(){that.txtChangeWpm();};
 	this.btnPlayPause.onclick = function(){that.btn_PlayPause();};
+	this.btnReset.onclick = function(){that.ResetRead();};
 	this.cvsCanvas.onmousedown = function(event){that.mouseDown(event);};
 	this.cvsCanvas.onmouseup = function(event){that.mouseUp(event);};
 	this.cvsCanvas.onmousemove = function(event){that.mouseMove(event);};
@@ -300,6 +303,13 @@ function readsy_widget(guid, text)
 		text = tmp.textContent || tmp.innerText || "";
 		
 	}
+	else
+	{
+		//In case any html was included in the inputted text, strip it out
+		var tmp = document.createElement("DIV");
+		tmp.innerHTML = text;
+		text = tmp.textContent || tmp.innerText || "";
+	}
 	this.textArray = text.trim().split(" ");
 	
 	//Set the default WPM
@@ -308,7 +318,15 @@ function readsy_widget(guid, text)
 	this.ResetRead();
 }
 
-function readsy_LoadUI()
+function readsy_UI(guid)
 {
-	return;
+	var ui = "<canvas id=\"readsy_canvas_"+guid+"\" width=\"300\" height=\"60\" /></canvas><div class=\"readsy_controls\"><button id=\"readsy_pp_"+guid+"\">Read</button><button id=\"readsy_reset_"+guid+"\">Reset</button><div class=\"readsy_wpm\">wpm: <input id=\"readsy_wpm_"+guid+"\" type=\"number\" min=\"100\" step=\"50\" value=\"500\"/></div></div>";
+	
+	var widget = document.createElement('div');
+	widget.setAttribute('id',"readsy_widget_"+guid);
+	widget.className = "readsy_widget";
+	
+	widget.innerHTML = ui;
+	
+	return widget;
 }
