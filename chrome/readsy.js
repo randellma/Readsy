@@ -1,6 +1,7 @@
 var readsy_ids = 0;
 var debouncer = false;
-function Load_Expanders(parent)
+
+function Load_Expanders_Experimental(root)
 {
 	if(debouncer)
 	{
@@ -8,32 +9,101 @@ function Load_Expanders(parent)
 	}
 	//Clear_Widgets(parent);
 	debouncer = true;
-	var taglineArray = parent.getElementsByClassName("md");
-	for(var i = 0; i < taglineArray.length; i++)
+	
+	var pArray = root.getElementsByTagName("p");
+	var coveredList = new Array();
+	for(var i=0; i < pArray.length; i++)
 	{
-		
-		if(taglineArray[i].getElementsByClassName("readsy_expander").length > 0)
+		var p = pArray[i];
+		var parent = p.parentNode;
+		var innerText = p.innerText;
+		//check if it already has a widget
+		var expanderExists = parent.getElementsByClassName("readsy_expander").length > 0;
+
+		//Determine if we even want to count this node
+		if(coveredList.indexOf(parent) != -1 || innerText == "" || innerText == undefined || innerText == null || expanderExists)
 		{
 			continue;
 		}
 		
-		var text = taglineArray[i].innerText;
-		if(text.length <= 0)
+		var text = GetInnerText(parent);
+
+		if(text.length > 200)
 		{
-			continue;
+			Insert_Expander_Before(p);
+			coveredList.push(parent);
 		}
-		Insert_Expander(taglineArray[i]);
+		
 	}
-	setInterval(function(){debouncer = false}, 1000);
+	
+	setTimeout(function(){debouncer = false}, 1000);
 }
 
-function Insert_Expander(el)
+function DoubleClickExpanders(root)
+{
+	//Clear_Widgets(p.parentNode);
+	var pArray = root.getElementsByTagName("p");
+	for(var i=0; i< pArray.length; i++)
+	{
+		pArray[i].addEventListener ("dblclick", 
+			function(){
+				var container = Insert_Expander_Before(this); 
+				var widget = Expander_Click(container);
+				if(widget)
+				{
+					readsy_ExternalPlayPause(widget, 800);
+				}
+			});
+	}
+}
+
+function GetInnerText(parent)
+{
+	return GetInnerTextAfterNode(parent.firstChild);
+}
+
+function GetInnerTextAfterNode(node)
+{
+	var lastNode = parent.lastChild;
+	var text = "";
+	do
+	{
+		var innerText = node.innerText;
+		if(innerText != undefined && innerText != null && node.tagName == "P")
+		{
+			/*if(!readsy_IsElementInViewport(node))
+			{
+				break;
+			}*/
+
+			alert
+			text += innerText + ' ';
+		}
+		node = node.nextSibling;
+	}while(node != lastNode && node != null)
+
+	return text;
+}
+ 
+//taken from stack overflow - http://stackoverflow.com/a/7557433
+function readsy_IsElementInViewport (el) {
+    var rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+    );
+}
+
+function Insert_Expander_Before(el)
 {
 	var container = document.createElement('div');
 	container.className = "readsy_container";
 	container.innerHTML = "<span class=\"readsy_expander\">[R]</span>";
-	el.insertBefore(container, el.firstChild);
+	el.parentNode.insertBefore(container, el);
 	container.firstChild.onclick = function(){Expander_Click(container);};
+	return container;
 }
 
 function Expander_Click(container)
@@ -43,10 +113,11 @@ function Expander_Click(container)
 	{
 		Clear_Widgets(container);
 		container.firstChild.innerHTML = "[R]";
+		return null;
 	}
 	else
 	{
-		Insert_Widget(container);
+		return Insert_Widget(container);
 	}
 	
 }
@@ -55,16 +126,16 @@ function Insert_Widget(container)
 {
 	parent = container.parentNode;
 	var guid = ++readsy_ids;
-	var text = parent.innerText;
+	var text = GetInnerTextAfterNode(container);
 	container.appendChild(readsy_UI(guid));
-	new readsy_widget(guid, text);
 	container.firstChild.innerHTML= "[-]";
+	return new readsy_widget(guid, text);
 
 }
 
 function Clear_Widgets(parent)
 {
-	var readsyArray = document.getElementsByClassName("readsy_widget");
+	var readsyArray = parent.getElementsByClassName("readsy_widget");
 	for(var i=0; readsyArray.length > 0; i++)
 	{
 		readsyArray[0].parentNode.removeChild(readsyArray[0]);
@@ -72,9 +143,26 @@ function Clear_Widgets(parent)
 }
 
 
-	Load_Expanders(document.documentElement);
-	document.addEventListener ("DOMNodeInserted", function(){Load_Expanders(this);});
+	//Load_Expanders(document.documentElement);
+	//Load_Expanders_Experimental(document.getElementsByTagName("body")[0]);
+	//document.addEventListener()
 	
+	//DoubleClickExpanders(document.documentElement);
+	document.addEventListener('dblclick', 
+		function(e) 
+		{
+			e = e || window.event;
+    		var target = e.target || e.srcElement;
+    		var container = Insert_Expander_Before(target); 
+			var widget = Expander_Click(container);
+			if(widget)
+			{
+				readsy_ExternalPlayPause(widget, 800);
+			}
+        	//text = target.textContent || text.innerText;   
+		}, false);
+	//document.addEventListener ("DOMNodeInserted", function(){DoubleClickExpanders(this);});
+
 	/*var expandArray = document.getElementsByClassName("comment");
 	for(var i=0; i< expandArray.length; i++)
 	{
