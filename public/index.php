@@ -27,10 +27,7 @@
 		<script>
 			var readsy_1 = new readsy_widget(1);
 		</script>
-		
-		
 	</body>
-
 </html>
 
 

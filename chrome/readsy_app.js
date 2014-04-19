@@ -5,7 +5,12 @@ function readsy_Continue(instance, interval)
 {
 	instance.place++;
 	instance.started = true;
-	setTimeout(function(){instance.Read()}, interval);
+	setTimeout(function(){instance.Read();}, interval);
+}
+
+function readsy_ExternalPlayPause(instance, timeout)
+{
+	setTimeout(function(){instance.btn_PlayPause();}, timeout);
 }
 
 /*Readsy Methods*/
@@ -45,6 +50,10 @@ function readsy_Read()
 /**/
 function readsy_DisplayWord(word)
 {
+	if(!word)
+	{
+		return;
+	}
 	this.DrawBlankSpace();
 	
 	var x = this.w/3;
