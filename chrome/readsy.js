@@ -80,8 +80,8 @@ function GetInnerTextAfterNode(node)
 			text += innerText + ' ';
 		}
 		node = node.nextSibling;
-	}while(node != lastNode && node != null)
-
+		var innerText = node.textContent;
+	}while(node != lastNode && node != null && (node.tagName == "P" || innerText == undefined || innerText == null))
 	return text;
 }
  
@@ -153,7 +153,7 @@ function Clear_Widgets(parent)
 		{
 			e = e || window.event;
     		var target = e.target || e.srcElement;
-    		
+
     		switch(target.tagName)
     		{
     			case "P":
