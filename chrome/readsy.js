@@ -68,7 +68,7 @@ function GetInnerTextAfterNode(node)
 	var text = "";
 	do
 	{
-		var innerText = node.innerText;
+		var innerText = node.textContent;
 		if(innerText != undefined && innerText != null && node.tagName == "P")
 		{
 			/*if(!readsy_IsElementInViewport(node))
@@ -153,19 +153,18 @@ function Clear_Widgets(parent)
 		{
 			e = e || window.event;
     		var target = e.target || e.srcElement;
-    		var container = Insert_Expander_Before(target); 
-			var widget = Expander_Click(container);
-			if(widget)
-			{
-				readsy_ExternalPlayPause(widget, 800);
+    		
+    		switch(target.tagName)
+    		{
+    			case "P":
+		    		var container = Insert_Expander_Before(target); 
+					var widget = Expander_Click(container);
+					if(widget)
+					{
+						readsy_ExternalPlayPause(widget, 800);
+					}
+					break;
 			}
         	//text = target.textContent || text.innerText;   
 		}, false);
-	//document.addEventListener ("DOMNodeInserted", function(){DoubleClickExpanders(this);});
 
-	/*var expandArray = document.getElementsByClassName("comment");
-	for(var i=0; i< expandArray.length; i++)
-	{
-		expandArray[i].addEventListener ("click", function(){Load_Expanders(this);});
-	}
-	*/

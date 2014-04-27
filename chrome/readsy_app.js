@@ -329,7 +329,7 @@ function readsy_widget(guid, text)
 
 function readsy_UI(guid)
 {
-	var ui = "<canvas id=\"readsy_canvas_"+guid+"\" width=\"300\" height=\"60\" /></canvas><div class=\"readsy_controls\"><button id=\"readsy_pp_"+guid+"\">Read</button><button id=\"readsy_reset_"+guid+"\">Reset</button><div class=\"readsy_wpm\">wpm: <input id=\"readsy_wpm_"+guid+"\" type=\"number\" min=\"100\" step=\"50\" value=\"500\"/></div></div>";
+	var ui = "<canvas id=\"readsy_canvas_"+guid+"\" width=\"300\" height=\"60\" /></canvas><div class=\"readsy_controls\"><button class=\"readsy_button\" id=\"readsy_pp_"+guid+"\">Read</button><button class=\"readsy_button\" id=\"readsy_reset_"+guid+"\">Reset</button><div class=\"readsy_wpm\">wpm: <input id=\"readsy_wpm_"+guid+"\" type=\"number\" min=\"100\" step=\"50\" value=\"500\"/></div></div>";
 	
 	var widget = document.createElement('div');
 	widget.setAttribute('id',"readsy_widget_"+guid);
