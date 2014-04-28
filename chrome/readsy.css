@@ -23,6 +23,7 @@
 	padding-right: 5px;
 	margin-top: 0px;
 	font-size: 8px !important;
+	line-height: 10px;
 	color: Red !important;
 	font-weight: bold;
 	float: left;
@@ -55,12 +56,16 @@
 .readsy_controls input
 {
 	width: 75px;
+	height: 20px !important;
+	padding: 0px !important;
+	margin-bottom: 2px !important;
 }
 
 .readsy_controls button
 {
 	width: 80px;
 	margin: 0px !important;
+	margin-top: 2px !important;
 }
 
 .readsy_wpm
