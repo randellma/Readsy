@@ -155,6 +155,7 @@ function readsy_ResetRead()
 function readsy_txtChangeWpm()
 {
 	this.baseTimeout = 60000/this.txtWpm.value;
+  	chrome.storage.sync.set({readsy_speed: this.txtWpm.value}, function(){});
 }
 /**/
 function readsy_btnPlayPause()
@@ -302,6 +303,9 @@ function readsy_widget(guid, text)
 	this.ctx.font = this.fontsize + "px Arial";
 	this.h = this.ctx.canvas.height;
 	this.w = this.ctx.canvas.width
+	//Stored settings
+	chrome.storage.sync.get({readsy_speed: '350'}, function(items) {that.txtWpm.value = items.readsy_speed; that.txtChangeWpm();});
+
 	//Set Text to Read
 	if(!text)
 	{
@@ -322,14 +326,14 @@ function readsy_widget(guid, text)
 	this.textArray = text.trim().split(" ");
 	
 	//Set the default WPM
-	this.txtChangeWpm();
+	//this.txtChangeWpm();
 	//Reset canvas to first word
 	this.ResetRead();
 }
 
 function readsy_UI(guid)
 {
-	var ui = "<canvas id=\"readsy_canvas_"+guid+"\" width=\"300\" height=\"60\" /></canvas><div class=\"readsy_controls\"><button class=\"readsy_button\" id=\"readsy_pp_"+guid+"\">Read</button><button class=\"readsy_button\" id=\"readsy_reset_"+guid+"\">Reset</button><div class=\"readsy_wpm\">wpm: <input id=\"readsy_wpm_"+guid+"\" type=\"number\" min=\"100\" step=\"50\" value=\"500\"/></div></div>";
+	var ui = "<canvas id=\"readsy_canvas_"+guid+"\" width=\"300\" height=\"60\" /></canvas><div class=\"readsy_controls\"><button class=\"readsy_button\" id=\"readsy_pp_"+guid+"\">Read</button><button class=\"readsy_button\" id=\"readsy_reset_"+guid+"\">Reset</button><div class=\"readsy_wpm\">wpm: <input id=\"readsy_wpm_"+guid+"\" type=\"number\" min=\"100\" step=\"50\" value=\"350\"/></div></div>";
 	
 	var widget = document.createElement('div');
 	widget.setAttribute('id',"readsy_widget_"+guid);

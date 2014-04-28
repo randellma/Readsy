@@ -11,7 +11,8 @@
   },
   "permissions": [
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "storage"
   ],
   "content_scripts": [
                       {

@@ -81,7 +81,7 @@ function GetInnerTextAfterNode(node)
 		}
 		node = node.nextSibling;
 		var innerText = node.textContent;
-	}while(node != lastNode && node != null && (node.tagName == "P" || innerText == undefined || innerText == null))
+	}while(node != lastNode && node != null && (node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ))
 	return text;
 }
  
