@@ -1,6 +1,8 @@
 .readsy_container {
 	font-family:Verdana !important;
+	color: #777 !important;
 	display: table;
+	width: 314px !important;
 }
 
 #readsy_text
@@ -11,11 +13,12 @@
 .readsy_widget
 {
 	border: 1px solid black;
-	width: 300px;
+	min-width: 300px !important;
 	padding: 6px;
 	margin-top: 1px;
 	margin-bottom: 5px;
 	background-color: white;
+	overflow: none !important;
 }
 
 .readsy_expander
@@ -44,6 +47,8 @@
 {
 	border: 1px solid #000000;
 	background-color: white;
+	margin: 0px !important;
+	display: block !important;
 }
 
 .readsy_controls
