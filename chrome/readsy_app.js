@@ -304,7 +304,12 @@ function readsy_widget(guid, text)
 	this.h = this.ctx.canvas.height;
 	this.w = this.ctx.canvas.width
 	//Stored settings
-	chrome.storage.sync.get({readsy_speed: '350'}, function(items) {that.txtWpm.value = items.readsy_speed; that.txtChangeWpm();});
+	chrome.storage.sync.get({readsy_speed: '350'}, 
+		function(items) 
+		{
+			that.txtWpm.value = items.readsy_speed; 
+			that.txtChangeWpm();
+		});
 
 	//Set Text to Read
 	if(!text)
