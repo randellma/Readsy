@@ -315,7 +315,7 @@ function readsy_widget(guid, text)
 	if(!text)
 	{
 		//Try to find the defined text and strip the extra html
-		text = document.getElementById("readsy_read_"+guid).innerHTML
+		text = document.getElementById("readsy_read_"+guid).textContent.replace(/\n/g, " ");
 		var tmp = document.createElement("DIV");
 		tmp.innerHTML = text;
 		text = tmp.textContent || tmp.innerText || "";
@@ -324,6 +324,7 @@ function readsy_widget(guid, text)
 	else
 	{
 		//In case any html was included in the inputted text, strip it out
+		text.replace(/\n/g, " ");
 		var tmp = document.createElement("DIV");
 		tmp.innerHTML = text;
 		text = tmp.textContent || tmp.innerText || "";

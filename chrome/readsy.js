@@ -68,8 +68,8 @@ function GetInnerTextAfterNode(node)
 	var text = "";
 	do
 	{
-		var innerText = node.textContent;
-		if(innerText != undefined && innerText != null && node.tagName == "P")
+		var innerText = node.textContent.replace(/\n/g, " ");
+		if(innerText != undefined && innerText != null && (node.tagName == "P" || node.tagName == "BLOCKQUOTE"))
 		{
 			/*if(!readsy_IsElementInViewport(node))
 			{
