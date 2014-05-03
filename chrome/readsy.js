@@ -69,7 +69,7 @@ function GetInnerTextAfterNode(node)
 	do
 	{
 		var innerText = node.textContent.replace(/\n/g, " ");
-		if(innerText != undefined && innerText != null && (node.tagName == "P" || node.tagName == "BLOCKQUOTE"))
+		if(innerText != undefined && innerText != null && innerText.length > 10)
 		{
 			/*if(!readsy_IsElementInViewport(node))
 			{
@@ -153,18 +153,19 @@ function Clear_Widgets(parent)
 		{
 			e = e || window.event;
     		var target = e.target || e.srcElement;
-
-    		switch(target.tagName)
+    		if(target.textContent.length > 10)
     		{
-    			case "P":
 		    		var container = Insert_Expander_Before(target); 
 					var widget = Expander_Click(container);
 					if(widget)
 					{
 						readsy_ExternalPlayPause(widget, 800);
 					}
-					break;
-			}
-        	//text = target.textContent || text.innerText;   
+    		}
+    		/*switch(target.tagName)
+    		{
+    			case "P":
+				break;
+			}*/  
 		}, false);
 
