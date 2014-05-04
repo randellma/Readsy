@@ -1,0 +1,33 @@
+body
+{
+	background-color: white;
+	background-color: #5cde4e;
+}
+
+.smalltile
+{
+	background-color: #5cde4e;
+	width: 440px;
+	height: 280px;
+	margin-left: 100px;
+}
+
+.icon
+{
+	-webkit-border-radius: 16px;
+	-moz-border-radius: 16px;
+	background-color: white;
+	width: 128px;
+	height: 128px;
+	border-radius: 16px;
+	font-family: verdana;
+	font-size: 128px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+p
+{
+	color: red;
+}

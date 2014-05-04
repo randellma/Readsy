@@ -16,7 +16,7 @@ function GetInnerTextAfterNode(node)
 		{
 			var innerText = node.innerText;
 		}
-	}while(node && innerText && (node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ))
+	}while(node && (node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ))
 	return text;
 }
  
@@ -91,7 +91,7 @@ function Clear_Containers(parent)
 		{
 			e = e || window.event;
     		var target = e.target || e.srcElement;
-    		if(target.textContent.length > 10 && target.innerText != null)
+    		if(target.textContent.length > 10 && target.innerText != null)// && event.altKey
     		{ 
     				Clear_Containers(document.documentElement);
 		    		var container = Insert_Expander_Before(target); 
