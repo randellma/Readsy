@@ -38,7 +38,6 @@ function readsy_Read()
 		{
 			interval = 1.5*this.baseTimeout;
 		}
-		
 		this.started = false;
 		readsy_Continue(this,interval);
 	}

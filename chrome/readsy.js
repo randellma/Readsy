@@ -1,87 +1,22 @@
 var readsy_ids = 0;
 var debouncer = false;
 
-function Load_Expanders_Experimental(root)
-{
-	if(debouncer)
-	{
-		return;
-	}
-	//Clear_Widgets(parent);
-	debouncer = true;
-	
-	var pArray = root.getElementsByTagName("p");
-	var coveredList = new Array();
-	for(var i=0; i < pArray.length; i++)
-	{
-		var p = pArray[i];
-		var parent = p.parentNode;
-		var innerText = p.innerText;
-		//check if it already has a widget
-		var expanderExists = parent.getElementsByClassName("readsy_expander").length > 0;
-
-		//Determine if we even want to count this node
-		if(coveredList.indexOf(parent) != -1 || innerText == "" || innerText == undefined || innerText == null || expanderExists)
-		{
-			continue;
-		}
-		
-		var text = GetInnerText(parent);
-
-		if(text.length > 200)
-		{
-			Insert_Expander_Before(p);
-			coveredList.push(parent);
-		}
-		
-	}
-	
-	setTimeout(function(){debouncer = false}, 1000);
-}
-
-function DoubleClickExpanders(root)
-{
-	//Clear_Widgets(p.parentNode);
-	var pArray = root.getElementsByTagName("p");
-	for(var i=0; i< pArray.length; i++)
-	{
-		pArray[i].addEventListener ("dblclick", 
-			function(){
-				var container = Insert_Expander_Before(this); 
-				var widget = Expander_Click(container);
-				if(widget)
-				{
-					readsy_ExternalPlayPause(widget, 800);
-				}
-			});
-	}
-}
-
-function GetInnerText(parent)
-{
-	return GetInnerTextAfterNode(parent.firstChild);
-}
-
 function GetInnerTextAfterNode(node)
 {
 	var lastNode = parent.lastChild;
 	var text = "";
 	do
 	{
-		var innerText = node.textContent.replace(/\n/g, " ");
 		if(innerText != undefined && innerText != null && innerText.length > 10)
 		{
-			/*if(!readsy_IsElementInViewport(node))
-			{
-				break;
-			}*/
-
-			alert
 			text += innerText + ' ';
 		}
 		node = node.nextSibling;
-		var innerText = node.textContent;
-	}while(node != lastNode && node != null && (node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ))
+		if(node)
+		{
+			var innerText = node.innerText;
+		}
+	}while(node && innerText && (node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ))
 	return text;
 }
  
@@ -142,19 +77,23 @@ function Clear_Widgets(parent)
 	}
 }
 
+function Clear_Containers(parent)
+{
+	var readsyArray = parent.getElementsByClassName("readsy_container");
+	for(var i=0; readsyArray.length > 0; i++)
+	{
+		readsyArray[0].parentNode.removeChild(readsyArray[0]);
+	}
+}
 
-	//Load_Expanders(document.documentElement);
-	//Load_Expanders_Experimental(document.getElementsByTagName("body")[0]);
-	//document.addEventListener()
-	
-	//DoubleClickExpanders(document.documentElement);
 	document.addEventListener('dblclick', 
 		function(e) 
 		{
 			e = e || window.event;
     		var target = e.target || e.srcElement;
-    		if(target.textContent.length > 10)
-    		{
+    		if(target.textContent.length > 10 && target.innerText != null)
+    		{ 
+    				Clear_Containers(document.documentElement);
 		    		var container = Insert_Expander_Before(target); 
 					var widget = Expander_Click(container);
 					if(widget)
@@ -168,4 +107,6 @@ function Clear_Widgets(parent)
 				break;
 			}*/  
 		}, false);
+
+
 
