@@ -3,7 +3,7 @@
 
   "name": "Readsy",
   "description": "Bring embedded speed reading to any website by double clicking the text",
-  "version": "0.4",
+  "version": "0.5",
   "homepage_url": "http://mattrandell.com/projects.php#readsy",
   "browser_action": {
     "default_icon": "icon128.png",
