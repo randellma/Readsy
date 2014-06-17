@@ -2,13 +2,16 @@
 	<head>
 		<title>Readsy</title>
 		<link rel="stylesheet" type="text/css" href="readsy.css">
+		<link rel="stylesheet" type="text/css" href="popup.css">
 	</head>
 
 	<body>
 		<div id="popup">
 			<div id="readsy_read_1">
-				<textarea id="readsy_text" rows="20" cols="42"></textarea>
-			</div>		
+				<textarea id="readsy_text" rows="20"></textarea>
+			</div>
+
+			<div id="readsy_popup" class="readsy_container"></div>		
 
 			<script type="text/javascript" src="readsy_app.js"></script>
 			<script type="text/javascript" src="popup.js"></script>
@@ -17,7 +20,7 @@
 		<div id="options">
 			Words per minute: 
 			<input id="wpm" type="number" min="100" step="50" ></input> <br />
-			Require Alt Key :
+			Require Alt Key + Double Click:
 			<input id="modifier" type="checkbox" ></input> <br /> <br />
 			<button id="save">Save!</button> <br /> <br />
 			<div id="status"></div>

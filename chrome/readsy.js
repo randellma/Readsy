@@ -113,6 +113,6 @@ document.addEventListener('dblclick',
 chrome.storage.sync.get({readsy_modifier: "false"}, 
 		function(items) 
 		{
-			require_alt = items.readsy_modifier == 'true';ß
+			require_alt = items.readsy_modifier == 'true';
 		});
 

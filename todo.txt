@@ -1,5 +1,1 @@
 TODO:
--Container parsing to more intelligently select readable text
--Expand beyond reddit
--Settings storage (wpm, etc)
--More options
