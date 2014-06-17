@@ -86,27 +86,33 @@ function Clear_Containers(parent)
 	}
 }
 
-	document.addEventListener('dblclick', 
-		function(e) 
+var require_alt = false;
+document.addEventListener('dblclick', 
+	function(e) 
+	{
+		e = e || window.event;
+		var target = e.target || e.srcElement;
+		if(target.textContent.length > 10 && target.innerText != null && (event.altKey && require_alt || !require_alt))
+		{ 
+				Clear_Containers(document.documentElement);
+	    		var container = Insert_Expander_Before(target); 
+				var widget = Expander_Click(container);
+				if(widget)
+				{
+					readsy_ExternalPlayPause(widget, 800);
+				}
+		}
+		/*switch(target.tagName)
 		{
-			e = e || window.event;
-    		var target = e.target || e.srcElement;
-    		if(target.textContent.length > 10 && target.innerText != null)// && event.altKey
-    		{ 
-    				Clear_Containers(document.documentElement);
-		    		var container = Insert_Expander_Before(target); 
-					var widget = Expander_Click(container);
-					if(widget)
-					{
-						readsy_ExternalPlayPause(widget, 800);
-					}
-    		}
-    		/*switch(target.tagName)
-    		{
-    			case "P":
-				break;
-			}*/  
-		}, false);
+			case "P":
+			break;
+		}*/  
+	}, false);
 
-
+//loadsettings 
+chrome.storage.sync.get({readsy_modifier: "false"}, 
+		function(items) 
+		{
+			require_alt = items.readsy_modifier == 'true';ß
+		});
 

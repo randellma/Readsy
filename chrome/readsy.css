@@ -125,3 +125,27 @@
 }
 button:focus {outline:0;}
 /* This button was generated using CSSButtonGenerator.com */
+
+
+/*-------------------------*/
+
+#options input
+{
+	display: inline !important;
+	width: 75px !important;
+	height: 20px !important;
+	padding: 0px !important;
+	margin-bottom: 2px !important;
+}
+
+#options
+{
+	display: none;
+	min-width: 320px;
+	height: 375px;
+}
+
+#status
+{
+	min-height: 20px;
+}

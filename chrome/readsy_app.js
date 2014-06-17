@@ -14,6 +14,11 @@ function readsy_ExternalPlayPause(instance, timeout)
 }
 
 /*Readsy Methods*/
+function readsy_LoadSettings(instance, settings)
+{
+	instance.txtWpm.value = settings.readsy_speed; 
+	instance.txtChangeWpm();
+}
 function readsy_Read()
 {
 	if(this.place >= this.textArray.length)
@@ -257,6 +262,7 @@ function readsy_widget(guid, text)
 	this.FillRedCharWord = readsy_FillRedCharWord;
 	this.ResetRead = readsy_ResetRead;
 	this.EndRead = readsy_EndRead;
+	this.LoadSettings = readsy_LoadSettings;
 	
 	//Event Methods
 	this.btn_PlayPause = readsy_btnPlayPause;
@@ -303,11 +309,10 @@ function readsy_widget(guid, text)
 	this.h = this.ctx.canvas.height;
 	this.w = this.ctx.canvas.width
 	//Stored settings
-	chrome.storage.sync.get({readsy_speed: '350'}, 
+	chrome.storage.sync.get({readsy_speed: '350', readsy_modifier: "false"}, 
 		function(items) 
 		{
-			that.txtWpm.value = items.readsy_speed; 
-			that.txtChangeWpm();
+			that.LoadSettings(that, items);
 		});
 
 	//Set Text to Read
