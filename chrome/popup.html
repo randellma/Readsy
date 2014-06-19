@@ -6,9 +6,17 @@
 	</head>
 
 	<body>
-		<div id="popup">
+
+		<div id="navigation">
+			<a id="popup_link" href="#">Input</a>
+			<a id="options_link" href="#">Options</a>
+			<a id="help_link" href="#">Help</a>
+		</div>
+
+		<div class="popup_section" id="popup">
+
 			<div id="readsy_read_1">
-				<textarea id="readsy_text" rows="20"></textarea>
+				<textarea id="readsy_text" rows="20" placeholder="Paste external text here to speed read..."></textarea>
 			</div>
 
 			<div id="readsy_popup" class="readsy_container"></div>		
@@ -17,17 +25,33 @@
 			<script type="text/javascript" src="popup.js"></script>
 		</div>
 
-		<div id="options">
-			Words per minute: 
-			<input id="wpm" type="number" min="100" step="50" ></input> <br />
-			Require Alt Key + Double Click:
-			<input id="modifier" type="checkbox" ></input> <br /> <br />
+		<div class="popup_section" id="options">
+			<h2>Options</h2>
+
+			<label> Words per minute: </label>
+			<input id="wpm" type="number" min="100" step="50" title="Words Per Minute"></input> <br />
+
+			<label>Require Alt Key:</label>
+			<input id="modifier" type="checkbox" title="Require Alt + Double Click for Readsy to appear" ></input> <br /> <br />
+
 			<button id="save">Save!</button> <br /> <br />
+
 			<div id="status"></div>
 			<br />
 
 		</div>
-		<a id="options_link" href="#">Options</a>
+
+		<div class="popup_section" id="help">
+			<h2>Help</h2>
+
+			<h3>How To</h3>
+			<p>Double click a block of text that you would like to begin reading. A Readsy Widget will appear before it and continue to the end of the content.</p>
+
+			<h3>Tips</h3>
+			<p>You can speed read text from non-web sources by pasting it into this popup on the input tab.</p>
+			<p>Requiring Alt Key in the options menu will cause Readsy only to appear when you double click with the alt key held.</p>
+		</div>
+
 		<script type="text/javascript" src="options.js"></script>
 		
 	</body>

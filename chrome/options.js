@@ -1,3 +1,38 @@
+//--------------------General---------------------------
+
+function DisplaySection(id)
+{
+	var sections = document.getElementsByClassName('popup_section');
+	for (var i = sections.length - 1; i >= 0; i--) {
+		sections[i].style.display = 'none'
+	};
+
+	current = document.getElementById(id);
+	current.style.display = 'block';
+
+}
+
+function HighlightNav(id)
+{
+	var tabs = document.getElementById('navigation').getElementsByTagName('A');
+	for (var i = tabs.length - 1; i >= 0; i--) {
+		tabs[i].style.background = '#DDD';
+	};
+
+	current = document.getElementById(id);
+	current.style.background = 'white';
+}
+
+document.getElementById('popup_link').addEventListener('click', function(){DisplaySection('popup'); HighlightNav('popup_link'); } );
+document.getElementById('options_link').addEventListener('click', function(){DisplaySection('options'); HighlightNav('options_link'); } );
+document.getElementById('help_link').addEventListener('click', function(){DisplaySection('help'); HighlightNav('help_link'); } );
+
+//Default Section
+DisplaySection('popup');
+HighlightNav('popup_link');
+
+//-------------Options----------------------
+
 function Restore() {
 
 	chrome.storage.sync.get({readsy_speed: '350'}, 
@@ -13,7 +48,6 @@ function Restore() {
 		});
 
 }
-
 
 // Saves options to chrome.storage
 function Save() {
@@ -33,22 +67,6 @@ function Save() {
   });
 }
 
-function ShowOptions(){
-	if(document.getElementById('options').style.display != 'block')
-	{
-		document.getElementById('popup').style.display = 'none';
-		document.getElementById('options').style.display = 'block';
-		document.getElementById('options_link').textContent = 'Back';
-	}
-	else
-	{
-		document.getElementById('options').style.display = 'none';
-		document.getElementById('popup').style.display = 'block';
-		document.getElementById('options_link').textContent = 'Options';
-	}
-}
-
 document.getElementById('save').addEventListener('click', Save);
 document.addEventListener('DOMContentLoaded', Restore);
 
-document.getElementById('options_link').addEventListener('click', ShowOptions);
