@@ -3,6 +3,10 @@
 	font-family:Verdana !important;
 	outline: none;
 }
+::-webkit-scrollbar 
+{ 
+    display: none; 
+}
 body
 {
 	margin: 0px;
@@ -38,6 +42,12 @@ h2, h3
 	margin-bottom: 2px !important;
 }
 
+/*input
+{
+	vertical-align: middle; margin: 0px;
+	margin-top: 5px;
+}*/
+
 #readsy_text
 {
 	width: 316px;
@@ -65,9 +75,4 @@ h2, h3
 	border-top-left-radius:5px;
 	border-top-right-radius:5px;
 	*/
-}
-
-#navigation a:hover
-{
-	background-color: #ccc;
 }
