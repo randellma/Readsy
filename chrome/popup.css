@@ -12,6 +12,8 @@ body
 	margin: 0px;
 	padding: 0px;
 	width: 316px;
+	height: 370px;
+	overflow: auto;
 }
 h2, h3
 {
@@ -21,6 +23,10 @@ h2, h3
 .readsy_widget
 {
 	margin-bottom: 0px !important;
+}
+.readsy_container
+{
+	margin-top: 0px !important;
 }
 
 .popup_section

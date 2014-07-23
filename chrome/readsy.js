@@ -7,14 +7,14 @@ function GetInnerTextAfterNode(node)
 	var text = "";
 	do
 	{
-		if(innerText != undefined && innerText != null && innerText.length > 10)
+		if(textContent != undefined && textContent != null && textContent.length > 10)
 		{
-			text += innerText + ' ';
+			text += textContent + ' ';
 		}
 		node = node.nextSibling;
 		if(node)
 		{
-			var innerText = node.innerText;
+			var textContent = node.textContent || node.innerText || "";
 		}
 	}while(node && (node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ))
 	return text;
@@ -92,7 +92,8 @@ document.addEventListener('dblclick',
 	{
 		e = e || window.event;
 		var target = e.target || e.srcElement;
-		if(target.textContent.length > 10 && target.innerText != null && (event.altKey && require_alt || !require_alt))
+		var innerContent = target.textContent || target.innerText || "";
+		if(innerContent.length > 10 && innerContent != null && (e.altKey && require_alt || !require_alt))
 		{ 
 				Clear_Containers(document.documentElement);
 	    		var container = Insert_Expander_Before(target); 
