@@ -5,18 +5,22 @@ function GetInnerTextAfterNode(node)
 {
 	var lastNode = parent.lastChild;
 	var text = "";
+	var i = 0;
 	do
 	{
-		if(textContent != undefined && textContent != null && textContent.length > 10)
+		i++;	
+		if(textContent != undefined && textContent != null && textContent.length > 10 && node.tagName != 'ASIDE' && node.className != 'google-mobile-ads-container')
 		{
 			text += textContent + ' ';
 		}
 		node = node.nextSibling;
-		if(node)
+		if(node && node != undefined)
 		{
 			var textContent = node.textContent || node.innerText || "";
+			textContent = textContent.trim();
+			//alert(node.tagName + " - " + textContent);
 		}
-	}while(node && (node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ))
+	}while(node && ((node.tagName != "H1" && node.tagName != "H2" && node.tagName != "H3" ) || i==1))
 	return text;
 }
  
@@ -93,6 +97,7 @@ document.addEventListener('dblclick',
 		e = e || window.event;
 		var target = e.target || e.srcElement;
 		var innerContent = target.textContent || target.innerText || "";
+
 		if(innerContent.length > 10 && innerContent != null && (e.altKey && require_alt || !require_alt))
 		{ 
 				Clear_Containers(document.documentElement);

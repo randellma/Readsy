@@ -39,13 +39,17 @@ h2, h3
 	overflow: scroll;
 }
 
-#options input
+#options input[type="number"]
 {
 	display: inline !important;
 	width: 75px !important;
 	height: 20px !important;
 	padding: 0px !important;
 	margin-bottom: 2px !important;
+}
+#options input[type="radio"]
+{
+	margin-left: 20px !important;
 }
 
 /*input
